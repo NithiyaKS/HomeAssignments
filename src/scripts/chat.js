@@ -46,6 +46,22 @@ class ChatUI {
     }
 
     initialize() {
+        // Add disclaimer container listener for real-time validation
+        // Disclaimer shows when unsupported language/engine combinations are selected
+        const disclaimerContainer = document.getElementById('disclaimerContainer');
+        if (disclaimerContainer && this.languageBindingSelect && this.browserEngineSelect) {
+            const updateDisclaimer = () => {
+                const lang = this.languageBindingSelect.value;
+                const eng = this.browserEngineSelect.value;
+                const isSupported = this.isJavaSelenium(lang, eng) || this.isPythonPlaywright(lang, eng);
+                disclaimerContainer.style.display = isSupported ? 'none' : 'block';
+            };
+            
+            this.languageBindingSelect.addEventListener('change', updateDisclaimer);
+            this.browserEngineSelect.addEventListener('change', updateDisclaimer);
+            updateDisclaimer(); // Initial check
+        }
+
         // Reset chat
         if (this.resetButton) {
             this.resetButton.addEventListener('click', () => {
